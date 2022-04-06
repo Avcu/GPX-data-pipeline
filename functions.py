@@ -43,3 +43,38 @@ def find_location(lat, long, LOCATIONS):
             min_dist = cur_dist
             min_loc = k
     return min_loc
+
+def create_kml_str(data_dict, type='running'):
+    kml_str = ""
+    print("-- Adding the head...")
+    kml_str += """<?xml version="1.0" encoding="UTF-8"?>
+    <kml xmlns="http://earth.google.com/kml/2.1">
+
+    <Document>
+    <name>My Tracks</name>
+    <description>Running and biking tracks in Los Angeles</description>
+    """
+
+    for v in data_dict.values():
+        if v['tracks'][0]['type'] == type:
+            placemarker_str = "<Placemark>\n"
+            placemarker_str += "<name>"
+            placemarker_str += "dist: {:.2f}km, time: {:.1f}min".format( 
+                                v['tracks'][0]['tot_distance_km'], v['tracks'][0]['tot_time_min'])
+            placemarker_str += "</name>\n"
+
+            placemarker_str += """<LineString><altitudeMode>relative</altitudeMode><coordinates>\n"""
+            
+            for i in range(len(v['tracks'][0]['points'])):
+                lat, long, _ = v['tracks'][0]['points'][i]
+                placemarker_str += "{},{},{}\n".format(long, lat, 0)
+
+            placemarker_str += """</coordinates></LineString></Placemark>\n\n"""
+            kml_str += placemarker_str
+
+    print("-- Adding the tail...")
+    kml_str += """</Document>
+    </kml>
+    """
+
+    return kml_str

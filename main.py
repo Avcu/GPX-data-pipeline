@@ -7,6 +7,8 @@ from datetime import datetime
 from functions import *
 
 _OUTPUT_LEN = 60
+_RUN_KM_H_THRESHOLD = 12
+_RUN_KM_THRESHOLD = 10
 
 LOCATIONS = {"LA, USA": (34.01842, -118.29528), "Ankara, TR": (39.86538, 32.74836), "Manisa, TR": (38.73484, 27.56861)}
 
@@ -77,6 +79,11 @@ for file_idx in range(num_file): # num_file
             segment_dict['tot_distance_km'] = tot_distance
             segment_dict['tot_time_min'] = tot_time/60
             segment_dict['ave_speed_km_h'] = tot_distance/(tot_time/3600)
+            if segment_dict['ave_speed_km_h'] > _RUN_KM_H_THRESHOLD or segment_dict['tot_distance_km'] > _RUN_KM_THRESHOLD:
+                segment_dict['type'] = 'biking'
+            else:
+                segment_dict['type'] = 'running'
+
             track_data[file_idx]['tracks'].append(segment_dict)
 
             print("Location: {}".format(loc_))
@@ -92,3 +99,21 @@ with open("track_data.json", "w") as f:
     json.dump(track_data, f)
 
 print("Data is saved as a JSON file.")
+
+# STEP-3
+print("="*_OUTPUT_LEN)
+print("STEP-3")
+print("-"*_OUTPUT_LEN)
+print("Create KML file...")
+
+running_kml = create_kml_str(track_data, type='running')
+biking_kml = create_kml_str(track_data, type='biking')
+
+print("Saving the KML file...")
+with open("tracks_run.kml", "w") as f:
+    f.write(running_kml)
+with open("tracks_bike.kml", "w") as f:
+    f.write(biking_kml)
+print("KML file is saved")
+
+
