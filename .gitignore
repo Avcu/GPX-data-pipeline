@@ -1,0 +1,11 @@
+# python
+.vscode 
+__pycache__
+
+# env
+gpx_env
+
+# data
+my_geo_data
+
+.DS_Store
