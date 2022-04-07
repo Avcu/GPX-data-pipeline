@@ -44,7 +44,27 @@ def find_location(lat, long, LOCATIONS):
             min_loc = k
     return min_loc
 
-def create_kml_str(data_dict, type='running'):
+def extract_statistics(data_dict, type="running"):
+    statistics_dict = {}
+    statistics_dict['num_track'] = 0
+    statistics_dict['tot_distance_km'] = 0
+    statistics_dict['track_calendar'] = {}
+    
+    for v in data_dict.values():
+        if v['tracks'][0]['type'] == type:
+            statistics_dict['num_track'] += 1
+            statistics_dict['tot_distance_km'] += v['tracks'][0]['tot_distance_km']
+
+            year_, month_ = v['tracks'][0]['year'], v['tracks'][0]['month']
+            if year_ not in statistics_dict['track_calendar']:
+                statistics_dict['track_calendar'][year_] = {}
+            if month_ not in statistics_dict['track_calendar'][year_]:
+                statistics_dict['track_calendar'][year_][month_] = 0
+            statistics_dict['track_calendar'][year_][month_] += v['tracks'][0]['tot_distance_km']
+
+    return statistics_dict
+
+def create_kml_str(data_dict, type="running"):
     kml_str = ""
     print("-- Adding the head...")
     kml_str += """<?xml version="1.0" encoding="UTF-8"?>

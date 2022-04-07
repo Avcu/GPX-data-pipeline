@@ -79,6 +79,9 @@ for file_idx in range(num_file): # num_file
             segment_dict['tot_distance_km'] = tot_distance
             segment_dict['tot_time_min'] = tot_time/60
             segment_dict['ave_speed_km_h'] = tot_distance/(tot_time/3600)
+            segment_dict['year'] = segment.points[0].time.year
+            segment_dict['month'] = segment.points[0].time.month
+            segment_dict['day'] = segment.points[0].time.day
             if segment_dict['ave_speed_km_h'] > _RUN_KM_H_THRESHOLD or segment_dict['tot_distance_km'] > _RUN_KM_THRESHOLD:
                 segment_dict['type'] = 'biking'
             else:
@@ -93,12 +96,17 @@ for file_idx in range(num_file): # num_file
 print("="*_OUTPUT_LEN)
 print("STEP-2")
 print("-"*_OUTPUT_LEN)
-print("Save the dictionary as a JSON file.")
+print("Extract the statistics and save as a JSON file...")
 
-with open("track_data.json", "w") as f:
-    json.dump(track_data, f)
+running_stats = extract_statistics(track_data, type='running')
+biking_stats = extract_statistics(track_data, type='biking')
 
-print("Data is saved as a JSON file.")
+with open("running_stats.json", "w") as f:
+    json.dump(running_stats, f)
+with open("biking_stats.json", "w") as f:
+    json.dump(biking_stats, f)
+
+print("Statistics are saved as JSON file.")
 
 # STEP-3
 print("="*_OUTPUT_LEN)
@@ -114,6 +122,6 @@ with open("tracks_run.kml", "w") as f:
     f.write(running_kml)
 with open("tracks_bike.kml", "w") as f:
     f.write(biking_kml)
-print("KML file is saved")
+print("KML files are saved")
 
 
