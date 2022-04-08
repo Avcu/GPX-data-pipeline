@@ -101,9 +101,9 @@ print("Extract the statistics and save as a JSON file...")
 running_stats = extract_statistics(track_data, type='running')
 biking_stats = extract_statistics(track_data, type='biking')
 
-with open("running_stats.json", "w") as f:
+with open("data/running_stats.json", "w") as f:
     json.dump(running_stats, f)
-with open("biking_stats.json", "w") as f:
+with open("data/biking_stats.json", "w") as f:
     json.dump(biking_stats, f)
 
 print("Statistics are saved as JSON file.")
@@ -118,9 +118,9 @@ running_kml = create_kml_str(track_data, type='running')
 biking_kml = create_kml_str(track_data, type='biking')
 
 print("Saving the KML file...")
-with open("tracks_run.kml", "w") as f:
+with open("data/tracks_run.kml", "w") as f:
     f.write(running_kml)
-with open("tracks_bike.kml", "w") as f:
+with open("data/tracks_bike.kml", "w") as f:
     f.write(biking_kml)
 print("KML files are saved")
 
